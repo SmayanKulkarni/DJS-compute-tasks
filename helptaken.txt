@@ -1,0 +1,12 @@
+from chat gpt:
+    1. display max columns and rows (cell 4)
+    2. to get the method to plot the graphs for year vs potential and year vs overall, for syntax and beautification
+    . to get bmi information for body type
+
+from documentations
+    1. references to most graph plots to check best graphs for plotting and their parameters
+    2. 
+
+    
+
+    
