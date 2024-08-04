@@ -1,0 +1,106 @@
+1. sofifa_id: unique number on sofifa
+2. player_url: url of the scraped player
+3. short_name: short name of the player
+4. long_name: long name of the player
+5. age: age of the player
+6. dob: date of birth
+7. height_cm: height (in cm) of the player
+8. weight_kg: weight (in kg) of the player
+9. nationality: nationality of the player
+10. club_name: club name of the player
+11. league_name: league name of the club
+12. league_rank: league rank of the club. e.g. Premier League is 1, Championship is 2, etc.
+13. overall: overall attribute
+14. potential: potential attribute
+15. value_eur: value (in EUR) of the player
+16. wage_eur: wage (in EUR) of the player
+17. player_positions: player positions
+18. preferred_foot: preferred foot
+19. international_reputation: international reputation attribute
+20. weak_foot: weak foot attribute
+21. skill_moves: quality moves attribute
+22. work_rate: productivity attribute
+23. body_type: type of body
+24. real_face: real face
+25. release_clause_eur: release clause (in EUR)
+26. player_tags: player tags
+27. team_position: player position in the team
+28. team_jersey_number: player shirt number in the team
+29. loaned_from: club name from which the player is on loan
+30. joined: join date
+31. contract_valid_until: contract expiration date
+32. nation_position: player position in the national team
+33. nation_jersey_number: player shirt number in the national team
+34. pace: player pace
+35. shooting: player shooting
+36. passing: player passing
+37. dribbling: player dribbling
+38. defending: player defending
+39. physic: player physic
+40. gk_diving: goalkeeper diving
+41. gk_handling: goalkeeper handling
+42. gk_kicking: goalkeeper kicking
+43. gk_reflexes: goalkeeper reflexes
+44. gk_speed: gk speed
+45. gk_positioning: gk positioning
+46. player_traits: player traits
+47. attacking_crossing: player crossing
+48. attacking_finishing: player finishing
+49. attacking_heading_accuracy: player heading
+50. attacking_short_passing: player short passing
+51. attacking_volleys: player volleys shot
+52. skill_dribbling: player dribbling
+53. skill_curve: player curve
+54. skill_fk_accuracy: player free-kick accuracy
+55. skill_long_passing: player long passing
+56. skill_ball_control: player ball control
+57. movement_acceleration: player acceleration
+58. movement_sprint_speed: player sprint
+59. movement_agility: player agility
+60. movement_reactions: player reaction
+61. movement_balance: player balance
+62. power_shot_power: player shot power
+63. power_jumping: player jumping
+64. power_stamina: player stamina
+65. power_strength: player strength
+66. power_long_shots: player long shots
+67. mentality_aggression: player aggression
+68. mentality_interceptions: player interception
+69. mentality_positioning: player positioning
+70. mentality_vision: player vision
+71. mentality_penalties: player penalties
+72. mentality_composure: player composure
+73. defending_marking: player marking
+74. defending_standing_tackle: player standing tackle
+75. defending_sliding_tackle: player sliding tackle
+76. goalkeeping_diving: gk diving
+77. goalkeeping_handling: gk handling
+78. goalkeeping_kicking: gk kicking
+79. goalkeeping_positioning: gk positioning
+80. goalkeeping_reflexes: gk reflexes
+81. ls: ls (left striker) position value
+82. st: st (striker) position value
+83. rs: rs (right striker) position value
+84. lw: lw (left winger) position value
+85. lf: lf (left forward) position value
+86. cf: cf (center forward) position value
+87. rf: rf (right forward) position value
+88. rw: rw (right winger) position value
+89. lam: lam (left attacking midfielder) position value
+90. cam: cam (center attacking midfielder) position value
+91. ram: ram (right attacking midfielder) position value
+92. lm: lm (left midfielder) position value
+93. lcm: lcm (left center midfielder) position value
+94. cm: cm (center midfielder) position value
+95. rcm: rcm (right center midfielder) position value
+96. rm: rm (right midfielder) position value
+97. lwb: lwb (left winger back) position value
+98. ldm: ldm (left defensive back) position value
+99. cdm: cdm (center defensive midfielder) position value
+100. rdm: rdm (right defensive midfielder) position value
+101. rwb: rwb (right winger back) position value
+102. lb: lb (left back) position value
+103. lcb: lcb (left center back) position value
+104. cb: cb (center back) position value
+105. rcb: rcb (right center back) position value
+106. rb: rb (right back) position value
