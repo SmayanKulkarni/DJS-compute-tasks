@@ -2,6 +2,7 @@ from chat gpt:
     1. display max columns and rows (cell 4)
     2. to get the method to plot the graphs for year vs potential and year vs overall, for syntax and beautification
     . to get bmi information for body type
+    3. in cell 104 i have used the help of gemini to correct my erros while defining the function
 
 from documentations
     1. references to most graph plots to check best graphs for plotting and their parameters
