@@ -1,0 +1,21 @@
+This dataset describes the listing activity and metrics for Airbnbs in New York City. 
+
+Data Description:
+
+1. listing_id - listing ID
+2. listing_name - name of the listing
+3. host_id - host ID
+4. host_name - name of the host
+5. borough - the borough of NYC where the Airbnb is located
+6. area - the neighbourhood of NYC where the Airbnb is located
+7. latitude - the latitudinal coordinates of the Airbnb
+8. longitude - the longitudinal coordinates of the Airbnb
+9. room_type - type of space listed
+10. price (in dollars) - the price per night for renting that listing in dollars 
+11. minimum_stay - the minimum number of nights a rentee is required to book
+12. no_of_reviews - total number of reviews for that listing
+13. last_review_date - date of the last review 
+14. reviews_per_month - number of reviews per month
+15. host_listing_count - amount of listings per host
+16. booking_availability - number of days (out of 365) when the listing is available for booking
+

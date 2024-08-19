@@ -1,0 +1,39 @@
+﻿DJS Compute DA & ML Task 1
+
+
+Data Preprocessing & Exploratory Data Analysis (EDA)
+
+
+References:
+
+
+Pandas 
+1.  A Gentle Introduction to Pandas Data Analysis (on Kaggle)
+2. Exploratory Data Analysis with Pandas Python
+3. Pandas For Beginners
+4. Getting started — pandas 2.2.2 documentation (Official Documentation)
+
+
+Matplotlib
+1. Matplotlib Tutorials - Corey Schafer
+2. Matplotlib Tutorial
+3. Pyplot tutorial — Matplotlib 3.9.2 documentation (Official Documentation)
+
+
+Seaborn
+1. Seaborn Is The Easier Matplotlib
+2. An introduction to seaborn (Official Documentation)
+
+
+Task: 
+Use Python libraries such as NumPy & Pandas to perform comprehensive data preprocessing on the provided dataset, which should involve cleaning the data, addressing any missing and/or duplicated values, outliers, and inconsistent data types. Apply necessary transformations to ensure it is suitable for analysis. 
+
+
+Following this, use visualization libraries such as Matplotlib & Seaborn to conduct an in-depth exploratory data analysis (EDA) to identify and examine underlying patterns, trends, and correlations within the data. Use appropriate plots to visualize the data and clearly and briefly explain what you interpret from them. 
+
+
+The use of comments to explain what a particular piece of code is doing is highly encouraged.
+
+
+Dataset Link: 
+Data
