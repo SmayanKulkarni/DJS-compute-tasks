@@ -1,0 +1,30 @@
+This dataset contains various characteristics of automobiles, focusing on aspects that influence risk assessment, performance, and pricing. 
+
+
+Column Descriptions:
+1. symboling - corresponds to a car’s insurance risk level relative to its price. A value of +3 indicates that the vehicle is risky, while -3 indicates that it is likely safe to insure.
+2. normalized-losses - average loss payment per insured vehicle per year.
+3. make - manufacturer of the car (e.g., Toyota, BMW, Honda).
+4. fuel-type - type of fuel the car uses (e.g., gas, diesel).
+5. aspiration - indicates whether the car is turbocharged or has a naturally aspirated engine (std = standard, turbo = turbocharged).
+6. num-of-doors - number of doors on the car (e.g., two, four).
+7. body-style - type of body (e.g., sedan, hatchback, convertible).
+8. drive-wheels - drivetrain of the car (e.g., fwd = front-wheel drive, rwd = rear-wheel drive).
+9. engine-location - location of the engine in the car (e.g., front, rear).
+10. wheel-base - distance between the front and rear wheels, typically measured in inches.
+11. length - overall length of the car.
+12. width - width of the car.
+13. height - height of the car.
+14. curb-weight - the total weight of the car without passengers or cargo.
+15. engine-type - configuration of the engine (e.g., V6, inline-4).
+16. num-of-cylinders: number of cylinders in the engine (e.g., four, six, eight).
+17. engine-size - size of the engine, usually measured in cubic centimeters (cc) or liters.
+18. fuel-system - type of fuel delivery system (e.g., MPFI, carburetor).
+19. bore - diameter of the cylinders in the engine.
+20. stroke - distance the piston travels within the cylinder.
+21. compression-ratio - ratio of the cylinder's maximum to minimum volume.
+22. horsepower - power output of the engine, typically measured in horsepower (hp).
+23. peak-rpm - maximum revolutions per minute the engine can achieve.
+24. city-mpg - fuel efficiency of the car in city driving conditions, measured in miles per gallon (mpg).
+25. highway-mpg - fuel efficiency of the car on highways, measured in miles per gallon (mpg).
+26. price (target variable) - the cost of the car in USD.
