@@ -10,29 +10,17 @@ model = pickle.load(open('/home/smayan/Desktop/DJS-compute-tasks/DJS-compute-tas
 
 # Load the dataset with accurate categories and columns (forstreamlit.csv)
 df_forstreamlit = pd.read_csv('/home/smayan/Desktop/DJS-compute-tasks/DJS-compute-tasks/Task 2/Notebook/forstreamlit.csv')
-
+df_forstreamlit.drop(columns=['Unnamed: 0'], axis=1,inplace=True)
 # Define categorical and numerical columns based on the dataset
 nonnumeric = ['make', 'fuel-type', 'aspiration', 'body-style', 'drive-wheels',
               'engine-location', 'engine-type', 'fuel-system']
 numerical_columns = ['wheel-base', 'length', 'width', 'curb-weight', 
                      'engine-size', 'bore', 'horsepower', 'city-mpg', 'highway-mpg']
-
-# Load the final training dataset for PCA transformation (final_data.csv)
-df_final = pd.read_csv('/home/smayan/Desktop/DJS-compute-tasks/DJS-compute-tasks/Task 2/Notebook/final_data.csv')
-
-# Extract feature names from the final dataset used for PCA transformation
-features = df_final.drop(['price'], axis=1).columns.tolist()
-
-# Fit the PCA on the original training data (use final_data.csv)
+features = df_forstreamlit.drop(columns=['price'], axis=1).columns.tolist()
 pca = PCA(n_components=0.96)
-X_train = df_final.drop(['price'], axis=1)
-X_train_scaled = scale(X_train)
-X_train_pca = pca.fit_transform(X_train_scaled)
-
 # Streamlit app interface
 st.title("Car Price Prediction App")
 
-# Categorical inputs (dropdowns) based on actual data from the DataFrame
 input_data = {}
 for col in nonnumeric:
     unique_values = df_forstreamlit[col].unique().tolist()
@@ -43,27 +31,27 @@ for col in numerical_columns:
     min_val = float(df_forstreamlit[col].min())
     max_val = float(df_forstreamlit[col].max())
     input_data[col] = st.slider(f"Select {col}", min_val, max_val, (min_val + max_val) / 2)
-
 # When the user clicks "Predict"
 if st.button("Predict"):
     # Combine categorical and numerical data into a single DataFrame
     input_df = pd.DataFrame([input_data], columns=df_forstreamlit.columns)
 
-    # One-hot encode the categorical data
-    X_encoded = pd.get_dummies(input_df, columns=nonnumeric)
+    # Trial code
+    columns = input_df.columns
 
-    # Ensure that the input has all the required columns (fill missing columns with 0s)
-    X_encoded = X_encoded.reindex(columns=features, fill_value=0)
+    # Generate random values (0 or 1) for all columns in input_df
+    random_values = np.random.randint(0, 2, size=(1, len(columns)))
 
-    # Fill any remaining NaN values in numerical columns (e.g., mean for numerical columns)
-    X_encoded[numerical_columns] = X_encoded[numerical_columns].fillna(df_forstreamlit[numerical_columns].mean())
+    # Create a DataFrame with the random values
+    input_data = pd.DataFrame(random_values, columns=columns)
 
-    # Scale the input data and apply the trained PCA transformation
-    X_input_scaled = scale(X_encoded)
-    X_input_pca = pca.transform(X_input_scaled)
 
-    # Predict the price using the trained model
-    prediction = model.predict(X_input_pca)
+    X_encoded = pd.get_dummies(input_data, columns=nonnumeric)
+    df_combined = pd.concat([input_data.drop(columns=nonnumeric).reset_index(allow_duplicates=False, drop=True), X_encoded.reset_index(allow_duplicates=False,drop=True)], axis=1)
 
+    X = df_combined.drop(['price'], axis = 1)
+    X_reduced = pca.fit_transform(scale(X_encoded))
+    X_reduced_test= pca.fit_transform(scale(X))[:,:24]
+    prediction = model.predict(X_reduced_test)
     # Display the predicted price
     st.write(f"Predicted Price: ${prediction[0]:,.2f}")
