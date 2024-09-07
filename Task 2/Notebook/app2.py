@@ -1,96 +1,69 @@
 import streamlit as st
+import pickle
 import pandas as pd
 import numpy as np
-import pickle
 from sklearn.preprocessing import scale
 from sklearn.decomposition import PCA
 
-# Load the model
-model_path = '/home/smayan/Desktop/DJS-compute-tasks/DJS-compute-tasks/Task 2/Data/model.sav'
-model = pickle.load(open(model_path, 'rb'))
+# Load the trained model
+model = pickle.load(open('/home/smayan/Desktop/DJS-compute-tasks/DJS-compute-tasks/Task 2/Data/model.sav', 'rb'))
 
-# Load training data to fit PCA
-data_path = '/home/smayan/Desktop/DJS-compute-tasks/DJS-compute-tasks/Task 2/Notebook/final_data.csv'
-df_combined = pd.read_csv(data_path)
+# Load the dataset with accurate categories and columns (forstreamlit.csv)
+df_forstreamlit = pd.read_csv('/home/smayan/Desktop/DJS-compute-tasks/DJS-compute-tasks/Task 2/Notebook/forstreamlit.csv')
 
-# Verify columns
-print("Columns in the dataset:", df_combined.columns.tolist())
+# Define categorical and numerical columns based on the dataset
+nonnumeric = ['make', 'fuel-type', 'aspiration', 'body-style', 'drive-wheels',
+              'engine-location', 'engine-type', 'fuel-system']
+numerical_columns = ['wheel-base', 'length', 'width', 'curb-weight', 
+                     'engine-size', 'bore', 'horsepower', 'city-mpg', 'highway-mpg']
 
-# Preprocessing steps
-nonnumeric = ['make', 'fuel-type', 'aspiration', 'body-style', 'drive-wheels', 'engine-location', 'engine-type', 'fuel-system']
+# Load the final training dataset for PCA transformation (final_data.csv)
+df_final = pd.read_csv('/home/smayan/Desktop/DJS-compute-tasks/DJS-compute-tasks/Task 2/Notebook/final_data.csv')
 
-# Check if nonnumeric columns are in the DataFrame
-missing_cols = [col for col in nonnumeric if col not in df_combined.columns]
-if missing_cols:
-    st.error(f"Missing columns in the dataset: {', '.join(missing_cols)}")
-else:
-    df_encoded = pd.get_dummies(df_combined, columns=nonnumeric)
-    df_combined = df_combined.drop(columns=nonnumeric)
-    df_combined = pd.concat([df_combined, df_encoded], axis=1)
-    df_combined = df_combined.fillna(0)  # Handle missing values
+# Extract feature names from the final dataset used for PCA transformation
+features = df_final.drop(['price'], axis=1).columns.tolist()
 
-    # Split data for PCA
-    X = df_combined.drop(['price'], axis=1)
-    y = df_combined['price']
+# Fit the PCA on the original training data (use final_data.csv)
+pca = PCA(n_components=0.96)
+X_train = df_final.drop(['price'], axis=1)
+X_train_scaled = scale(X_train)
+X_train_pca = pca.fit_transform(X_train_scaled)
 
-    # Fit PCA with the same parameters as used in training
-    pca = PCA(n_components=0.96)
-    X_reduced = pca.fit_transform(scale(X))
+# Streamlit app interface
+st.title("Car Price Prediction App")
 
-    # Function to preprocess the input data
-    def preprocess_input(data):
-        df = pd.DataFrame([data])
-        df['num-of-doors'] = df['num-of-doors'].map({'two': 2, 'four': 4})
-        df['num-of-cylinders'] = df['num-of-cylinders'].map({'six': 6, 'four': 4, 'five': 5, 'three': 3, 'twelve': 12, 'eight': 8})
-        df_encoded = pd.get_dummies(df, columns=nonnumeric)
-        for col in X.columns:
-            if col not in df_encoded.columns:
-                df_encoded[col] = 0
-        df_encoded = df_encoded.fillna(0)
-        return df_encoded
+# Categorical inputs (dropdowns) based on actual data from the DataFrame
+input_data = {}
+for col in nonnumeric:
+    unique_values = df_forstreamlit[col].unique().tolist()
+    input_data[col] = st.selectbox(f"Select {col}", unique_values)
 
-    # Streamlit app
-    st.title("Car Price Prediction")
+# Numerical inputs (sliders) based on actual min/max values from the DataFrame
+for col in numerical_columns:
+    min_val = float(df_forstreamlit[col].min())
+    max_val = float(df_forstreamlit[col].max())
+    input_data[col] = st.slider(f"Select {col}", min_val, max_val, (min_val + max_val) / 2)
 
-    # Input fields for user to enter car details
-    make = st.selectbox('Make', ['audi', 'bmw', 'chevrolet', 'dodge', 'honda', 'jaguar', 'mazda', 'mitsubishi', 'nissan', 'peugeot', 'plymouth', 'saab', 'subaru', 'toyota', 'volkswagen'])
-    fuel_type = st.selectbox('Fuel Type', ['gas', 'diesel'])
-    aspiration = st.selectbox('Aspiration', ['std', 'turbo'])
-    body_style = st.selectbox('Body Style', ['hardtop', 'wagon', 'sedan', 'convertible', 'hatchback'])
-    drive_wheels = st.selectbox('Drive Wheels', ['fwd', 'rwd', '4wd'])
-    engine_location = st.selectbox('Engine Location', ['front', 'rear'])
-    engine_type = st.selectbox('Engine Type', ['dohc', 'ohc', 'l', 'ohcf', 'rotor'])
-    fuel_system = st.selectbox('Fuel System', ['mpfi', '2bbl', '4bbl', 'spdi', '1bbl', 'spfi'])
+# When the user clicks "Predict"
+if st.button("Predict"):
+    # Combine categorical and numerical data into a single DataFrame
+    input_df = pd.DataFrame([input_data], columns=df_forstreamlit.columns)
 
-    num_of_doors = st.selectbox('Number of Doors', ['two', 'four'])
-    num_of_cylinders = st.selectbox('Number of Cylinders', ['four', 'six', 'five', 'three', 'twelve', 'eight'])
-    bore = st.number_input('Bore', min_value=0.0, step=0.1)
-    stroke = st.number_input('Stroke', min_value=0.0, step=0.1)
-    horsepower = st.number_input('Horsepower', min_value=0, step=1)
-    peak_rpm = st.number_input('Peak RPM', min_value=0, step=1)
+    # One-hot encode the categorical data
+    X_encoded = pd.get_dummies(input_df, columns=nonnumeric)
 
-    # Predict button
-    if st.button('Predict'):
-        input_data = {
-            'make': make,
-            'fuel-type': fuel_type,
-            'aspiration': aspiration,
-            'body-style': body_style,
-            'drive-wheels': drive_wheels,
-            'engine-location': engine_location,
-            'engine-type': engine_type,
-            'fuel-system': fuel_system,
-            'num-of-doors': num_of_doors,
-            'num-of-cylinders': num_of_cylinders,
-            'bore': bore,
-            'stroke': stroke,
-            'horsepower': horsepower,
-            'peak-rpm': peak_rpm
-        }
-        
-        preprocessed_data = preprocess_input(input_data)
-        X_reduced = pca.transform(scale(preprocessed_data))
-        prediction = model.predict(X_reduced)
-        
-        st.write(f"Predicted Price: ${prediction[0]:,.2f}")
+    # Ensure that the input has all the required columns (fill missing columns with 0s)
+    X_encoded = X_encoded.reindex(columns=features, fill_value=0)
 
+    # Fill any remaining NaN values in numerical columns (e.g., mean for numerical columns)
+    X_encoded[numerical_columns] = X_encoded[numerical_columns].fillna(df_forstreamlit[numerical_columns].mean())
+
+    # Scale the input data and apply the trained PCA transformation
+    X_input_scaled = scale(X_encoded)
+    X_input_pca = pca.transform(X_input_scaled)
+
+    # Predict the price using the trained model
+    prediction = model.predict(X_input_pca)
+
+    # Display the predicted price
+    st.write(f"Predicted Price: ${prediction[0]:,.2f}")

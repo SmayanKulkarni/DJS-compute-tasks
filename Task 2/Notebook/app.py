@@ -2,7 +2,7 @@ import streamlit as st
 import pickle
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import scale
 from sklearn.decomposition import PCA
 
 # Load the trained model
@@ -17,23 +17,13 @@ nonnumeric = ['make', 'fuel-type', 'aspiration', 'body-style', 'drive-wheels',
 numerical_columns = ['wheel-base', 'length', 'width', 'curb-weight', 
                      'engine-size', 'bore', 'horsepower', 'city-mpg', 'highway-mpg']
 
-# Load the final dataset used for PCA transformation (final_data.csv)
-df_final = pd.read_csv('/home/smayan/Desktop/DJS-compute-tasks/DJS-compute-tasks/Task 2/Notebook/final_data.csv')
+# df_final = pd.read_csv('/home/smayan/Desktop/DJS-compute-tasks/DJS-compute-tasks/Task 2/Notebook/final_data.csv')
 
 # Extract feature names from the final dataset used for PCA transformation
-features = df_final.drop(['price'], axis=1).columns.tolist()
+features = df_forstreamlit.drop(['price'], axis=1).columns.tolist()
 
 # Initialize the scaler and PCA with the same parameters used during training
-scaler = StandardScaler()
 pca = PCA(n_components=0.96)
-
-# Fit the scaler and PCA with the final_data (training data)
-X = df_final.drop(['price'], axis=1)
-X_scaled = scaler.fit_transform(X)
-pca.fit(X_scaled)
-
-# Define the number of principal components expected (29 components)
-n_components = 29
 
 # Streamlit app interface
 st.title("Car Price Prediction App")
@@ -53,32 +43,12 @@ for col in numerical_columns:
 # When the user clicks "Predict"
 if st.button("Predict"):
     # Combine categorical and numerical data into a single DataFrame
-    input_df = pd.DataFrame([input_data])
+    input_df = pd.DataFrame([input_data], columns=df_forstreamlit.columns)
 
-    # Handle categorical encoding (pd.get_dummies) only on non-numeric columns
-    input_df_encoded = pd.get_dummies(input_df, columns=nonnumeric)
-    
-    # Reindex the input DataFrame to match the structure of the final_data DataFrame
-    input_df_encoded = input_df_encoded.reindex(columns=features, fill_value=0)
-
-    # Apply scaling
-    input_scaled = scaler.transform(input_df_encoded)
-    
-    # Apply PCA transformation to ensure 29 dimensions
-    input_reduced = pca.fit_transform(input_scaled)
-    if input_reduced.shape[1] != n_components:
-        # If the number of components is different, truncate or pad to match
-        input_reduced = np.hstack([input_reduced, np.zeros((input_reduced.shape[0], n_components - input_reduced.shape[1]))]) if input_reduced.shape[1] < n_components else input_reduced[:, :n_components]
-
-    # Ensure the dimensionality matches the model's expectation (29 components)
-    if input_reduced.shape[1] != n_components:
-        st.error(f"The input data dimensionality ({input_reduced.shape[1]}) does not match the model's expectations ({n_components}).")
-    else:
-        # Make a prediction
-        prediction = model.predict(input_reduced)
-
-        # Convert the prediction to a scalar value for formatting
-        prediction_value = prediction[0] if isinstance(prediction, np.ndarray) else prediction
-
-        # Display the prediction
-        st.write(f"Predicted Price: ${prediction:}")
+    X_encoded = pd.get_dummies(input_df, columns=nonnumeric)
+    df_combined = pd.concat([input_df.drop(columns=nonnumeric).reset_index(allow_duplicates=False, drop=True), X_encoded.reset_index(allow_duplicates=False,drop=True)], axis=1)
+    X = df_combined.drop(['price'], axis = 1)
+    X_reduced = pca.fit_transform(scale(X_encoded))
+    X_reduced_test= pca.fit_transform(scale(X))[:,:29]
+    prediction = model.predict(X_reduced_test)
+    st.write(f"Predicted Price: ${prediction:}")
