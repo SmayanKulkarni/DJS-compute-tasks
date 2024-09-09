@@ -1,78 +1,92 @@
 import streamlit as st
-import pickle
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import scale
+import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.decomposition import PCA
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+import pickle
 
-# Load the trained model
+# Load the saved model
 model = pickle.load(open('/home/smayan/Desktop/DJS-compute-tasks/DJS-compute-tasks/Task 2/Data/model.sav', 'rb'))
 
-# Load the dataset with accurate categories and columns (forstreamlit.csv)
-df_forstreamlit = pd.read_csv('/home/smayan/Desktop/DJS-compute-tasks/DJS-compute-tasks/Task 2/Notebook/forstreamlit.csv')
-df_forstreamlit.drop(columns=['Unnamed: 0'], axis=1, inplace=True)
+# Load the final data
+df_combined = pd.read_csv('final_data.csv')
 
-# Define categorical and numerical columns based on the dataset
-nonnumeric = ['make', 'fuel-type', 'aspiration', 'body-style', 'drive-wheels',
-              'engine-location', 'engine-type', 'fuel-system']
-numerical_columns = ['wheel-base', 'length', 'width', 'curb-weight', 
-                     'engine-size', 'bore', 'horsepower', 'city-mpg', 'highway-mpg']
-features = df_forstreamlit.drop(columns=['price'], axis=1).columns.tolist()
+# Create a Streamlit app
+st.title("Automobile Price Prediction App")
 
-# Fit PCA using the scaled version of the dataset (excluding 'price')
-X_for_pca = df_forstreamlit.drop(columns=['price'])
-X_for_pca_scaled = scale(pd.get_dummies(X_for_pca, columns=nonnumeric))
-pca = PCA(n_components=0.96)
-pca.fit(X_for_pca_scaled)
+# Add a sidebar with options
+st.sidebar.header("Options")
+option = st.sidebar.selectbox("Select an option", ["View Data", "Make a Prediction"])
 
-# Streamlit app interface
-st.title("Car Price Prediction App")
+# View Data option
+if option == "View Data":
+    st.header("Data")
+    st.write(df_combined.head(10))
 
-# Categorical inputs (dropdowns) based on actual data from the DataFrame
-input_data = {}
-for col in nonnumeric:
-    unique_values = df_forstreamlit[col].unique().tolist()
-    input_data[col] = st.selectbox(f"Select {col}", unique_values)
+# Make a Prediction option
+elif option == "Make a Prediction":
+    st.header("Make a Prediction")
+    # Create input fields for the user to enter values
+    num_doors = st.number_input("Number of Doors")
+    bore = st.number_input("Bore")
+    stroke = st.number_input("Stroke")
+    horsepower = st.number_input("Horsepower")
+    peak_rpm = st.number_input("Peak RPM")
+    price = st.number_input("Price")
+    city_mpg = st.number_input("City MPG")
+    highway_mpg = st.number_input("Highway MPG")
+    engine_size = st.number_input("Engine Size")
+    curb_weight = st.number_input("Curb Weight")
+    make = st.selectbox("Make", df_combined['make'].unique())
+    fuel_type = st.selectbox("Fuel Type", df_combined['fuel-type'].unique())
+    aspiration = st.selectbox("Aspiration", df_combined['aspiration'].unique())
+    body_style = st.selectbox("Body Style", df_combined['body-style'].unique())
+    drive_wheels = st.selectbox("Drive Wheels", df_combined['drive-wheels'].unique())
+    engine_location = st.selectbox("Engine Location", df_combined['engine-location'].unique())
+    engine_type = st.selectbox("Engine Type", df_combined['engine-type'].unique())
+    fuel_system = st.selectbox("Fuel System", df_combined['fuel-system'].unique())
 
-# Numerical inputs (sliders) based on actual min/max values from the DataFrame
-for col in numerical_columns:
-    min_val = float(df_forstreamlit[col].min())
-    max_val = float(df_forstreamlit[col].max())
-    input_data[col] = st.slider(f"Select {col}", min_val, max_val, (min_val + max_val) / 2)
+    # Create a dictionary to store the input values
+    input_values = {
+        'num-of-doors': num_doors,
+        'bore': bore,
+        'stroke': stroke,
+        'horsepower': horsepower,
+        'peak-rpm': peak_rpm,
+        'price': price,
+        'city-mpg': city_mpg,
+        'highway-mpg': highway_mpg,
+        'engine-size': engine_size,
+        'curb-weight': curb_weight,
+        'make': make,
+        'fuel-type': fuel_type,
+        'aspiration': aspiration,
+        'body-style': body_style,
+        'drive-wheels': drive_wheels,
+        'engine-location': engine_location,
+        'engine-type': engine_type,
+        'fuel-system': fuel_system
+    }
 
-# When the user clicks "Predict"
-if st.button("Predict"):
-    # Combine user input categorical and numerical data into a single DataFrame
-    input_df = pd.DataFrame([input_data], columns=df_forstreamlit.columns)
+    # Create a DataFrame from the input values
+    input_df = pd.DataFrame([input_values])
 
-    # Encode categorical data
-    X_encoded = pd.get_dummies(input_df, columns=nonnumeric)
+    # Encode the categorical values
+    nonnumeric = ['make','fuel-type','aspiration','body-style','drive-wheels','engine-location','engine-type','fuel-system']
+    input_df_encoded = pd.get_dummies(input_df, columns=nonnumeric)
 
-    # Ensure that the input has all required columns (align with training data)
-    X_encoded = X_encoded.reindex(columns=features, fill_value=0).dropna()
+    # Scale the input values
+    input_scaled = scale(input_df_encoded)
 
-    # Scale the input data and apply PCA transformation
-    X_input_scaled = scale(X_encoded)
-    X_input_pca = pca.transform(X_input_scaled)[:,:29]
+    # Apply PCA to the scaled input values
+    pca = PCA(n_components=0.96)
+    input_pca = pca.fit_transform(input_scaled)
 
-    # Predict price based on user input
-    user_prediction = model.predict(X_input_pca)
+    # Make a prediction using the model
+    prediction = model.predict(input_pca)
 
-    # Display the predicted price for user input
-    st.write(f"Predicted Price (User Input): ${user_prediction[0]:,.2f}")
-
-    # ---- Dummy Input Generation and Prediction ----
-
-    # Create random dummy values for all columns (either 0 or 1 for categorical)
-    dummy_values = np.random.randint(0, 2, size=(1, len(features)))
-    dummy_df = pd.DataFrame(dummy_values, columns=features)
-
-    # Scale and apply PCA transformation to dummy input
-    dummy_scaled = scale(dummy_df)
-    dummy_pca = pca.transform(dummy_scaled)[:,:29]
-
-    # Predict price based on the dummy input
-    dummy_prediction = model.predict(dummy_pca)
-
-    # Display the predicted price for dummy input
-    st.write(f"Predicted Price (Dummy Input): ${dummy_prediction[0]:,.2f}")
+    # Display the prediction
+    st.write("Predicted Price: ${:.2f}".format(prediction[0]))
