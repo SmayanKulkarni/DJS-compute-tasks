@@ -3,7 +3,7 @@ import pickle
 import numpy as np 
 
 # Load the saved model
-with open('/home/smayan/Desktop/DJS-compute-tasks/DJS-compute-tasks/Flask Session/practical/models/iris_classifier.pkl', 'rb') as file:
+with open(r'/home/smayan/Desktop/DJS-compute-tasks/DJS-compute-tasks/Flask Session/practical/models/iris_classifier.pkl', 'rb') as file:
     model = pickle.load(file)
 
 app = Flask(__name__)
