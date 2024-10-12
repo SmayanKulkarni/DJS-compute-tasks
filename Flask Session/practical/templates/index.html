@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iris Classifier</title>
+  <link rel="stylesheet" href="static/css/styles.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+</head>
+
+<body>
+  <h1> Iris Flower Classifier </h1>
+
+   <div class="form-container">
+      <form class="prediction-form" id="predictionForm">
+        <label for="sepal-length"> Sepal Length (in cm): </label> 
+        <input type="number" id="sepal-length" name="sepal-length" step="0.01" required /> <br> <br>
+
+        <label for="sepal-width"> Sepal Width (in cm): </label>
+        <input type="number" id="sepal-width" name="sepal-width" step="0.01" required /> <br> <br>
+
+        <label for="petal-length"> Petal Length (in cm): </label>
+        <input type="number" id="petal-length" name="petal-length" step="0.01" required /> <br> <br>
+
+        <label for="petal-width"> Petal Width (in cm): </label>
+        <input type="number" id="petal-width" name="petal-width" step="0.01" required /> <br> <br>
+
+        <button type="submit"> Predict Species </button> <br><br>
+        <p id="prediction"></p>
+
+      </form>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        $('#predictionForm').on('submit', function (event) {
+          event.preventDefault(); // Prevent the default form submission
+          $.ajax({
+            type: 'POST',
+            url: '/predict', // URL of the predict endpoint
+            data: $(this).serialize(), // Serialize form data
+            success: function (response) {
+              // Update the prediction paragraph with the response
+              $('#prediction').text('The predicted species is: ' + response.prediction);
+            },
+            error: function () {
+              $('#prediction').text('An error occurred while making the prediction.');
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
