@@ -1,0 +1,13 @@
+This dataset provides information on the size and characteristics of three penguin species (Adélie, Gentoo, and Chinstrap) observed in the Palmer Archipelago, Antarctica.
+
+The dataset is collected by Dr. Kristen Gorman and the Palmer Station, LTER (Long Term Ecological Research) Program.
+
+
+1) species - The species of the penguin (Adélie, Gentoo, or Chinstrap) - target 
+2) island - The name of the island where the penguin was observed (Torgersen, Biscoe, Dream)
+3) bill_length_mm - The length of the penguin’s bill (culmen) in millimeters	
+4) bill_depth_mm - The depth of the penguin’s bill (culmen) in millimeters
+5) flipper_length_mm - The length of the penguin’s flipper in millimeters
+6) body_mass_g - The body mass of the penguin in grams
+7) sex - The sex of the penguin (male or female)
+8) year - The year of observation (2007, 2008, or 2009)
