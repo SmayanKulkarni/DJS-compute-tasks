@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penguin Species Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Penguin Species Prediction</h1>
+    <form action="/predict" method="POST">
+        <label for="year">Year:</label>
+        <input type="text" id="year" name="year" required><br>
+
+        <label for="bill_length_mm">Bill Length (mm):</label>
+        <input type="text" id="bill_length_mm" name="bill_length_mm" required><br>
+
+        <label for="bill_depth_mm">Bill Depth (mm):</label>
+        <input type="text" id="bill_depth_mm" name="bill_depth_mm" required><br>
+
+        <label for="flipper_length_mm">Flipper Length (mm):</label>
+        <input type="text" id="flipper_length_mm" name="flipper_length_mm" required><br>
+
+        <label for="body_mass_g">Body Mass (g):</label>
+        <input type="text" id="body_mass_g" name="body_mass_g" required><br>
+
+        <label for="island">Island:</label>
+        <select id="island" name="island" required>
+            <option value="Torgersen">Torgersen</option>
+            <option value="Biscoe">Biscoe</option>
+            <option value="Dream">Dream</option>
+        </select><br>
+
+        <label for="sex">Sex:</label>
+        <select id="sex" name="sex" required>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select><br>
+
+        <input type="submit" value="Predict">
+    </form>
+</body>
+</html>
